@@ -8,62 +8,7 @@ It provides a browser-based environment for creating use case diagrams, editing 
 
 ![Structured Use Case Editor](images/structured-use-case-editor.png)
 
-The editor is intentionally deployment-neutral. The user interface is implemented with static HTML, JavaScript, and CSS. A small cPanel/Passenger Python deployment example is included, but it is not required to run or host the editor.
-
-## Why This Editor Exists
-
-Structured use cases are intended to make behavioral modeling more explicit and useful by describing not only the normal flow of behavior, but also valid alternatives and exception conditions.
-
-The editor provides a practical environment for experimenting with that model and its editing workflow before integration with SysML v2 modeling tools.
-
-It is intended to help validate:
-
-- The Structured Use Cases model
-- Use case diagram editing
-- Structured scenario editing
-- Alternate and exception behavior
-- Branch and rejoin references
-- JSON model interchange
-- UCML textual notation
-- Document-oriented views of structured use case specifications
-
-The editor should be viewed as a **reference implementation and experimentation environment**, not as a replacement for a full SysML v2 modeling tool.
-
-## Features
-
-The current implementation includes:
-
-- Use case diagram editing
-- Actor and use case nodes
-- Association relationships
-- Include relationships
-- Extend relationships
-- Invoke relationships
-- Precedes relationships
-- Use case specification editing
-- Basic/nominal scenarios
-- Alternate scenarios
-- Exception scenarios
-- Branch and rejoin step references
-- Generated document preview
-- JSON model view
-- UCML textual notation view
-
-## Structured Use Case Concepts
-
-A structured use case describes system behavior as scenarios composed of ordered steps.
-
-A use case can contain:
-
-- A **Basic Scenario** describing the normal behavior
-- **Alternate Scenarios** describing valid variations
-- **Exception Scenarios** describing error conditions or other off-nominal behavior
-
-Making these paths explicit can help engineers discover requirements that may be missed when only the nominal behavior is modeled.
-
-The Structured Use Case Editor provides an interactive environment for creating and examining these structures.
-
-## Relationship to the Structured Use Cases SysML v2 Library
+## Structured Use Cases SysML v2 Library
 
 This editor is a companion reference implementation for the **Structured Use Cases SysML v2 library**.
 
@@ -71,121 +16,119 @@ The library defines the modeling concepts for representing structured use cases 
 
 The two projects are intended to complement one another:
 
-**Structured Use Cases library -> semantic model**
+**Structured Use Cases library → semantic model**
 
-**Structured Use Case Editor -> reference editing environment**
+**Structured Use Case Editor → reference editing environment**
 
-Structured Use Cases repository:
+**[Structured Use Cases SysML v2 Library on GitHub](https://github.com/doug-rosenberg/structured-use-cases)**
 
-https://github.com/doug-rosenberg/structured-use-cases
+## What the Editor Does
+
+The editor provides an interactive environment for working with structured use cases.
+
+It supports:
+
+- Creating and editing **use case diagrams**
+- Creating **actors and use cases**
+- Connecting model elements with use case relationships
+- Editing structured **use case specifications**
+- Defining **basic, alternate, and exception scenarios**
+- Defining ordered **scenario steps**
+- Viewing the underlying structured model
+- Examining the model in **JSON**
+- Examining a textual **UCML representation**
+
+The editor is intended as a reference implementation and experimentation environment rather than a production modeling tool.
+
+## Structured Use Case Specifications
+
+The editor emphasizes the behavioral content of a use case rather than treating the use case diagram as the complete model.
+
+A structured use case specification can describe:
+
+- The use case and participating actors
+- The basic or nominal scenario
+- Alternate scenarios
+- Exception scenarios
+- Ordered behavioral steps
+- Postconditions associated with different scenarios
+
+This structure helps make system behavior explicit and provides a foundation for requirements discovery and behavioral testing.
+
+## Basic, Alternate, and Exception Scenarios
+
+A central concept of Structured Use Cases is that system behavior should not be limited to the normal path.
+
+**Basic scenarios** describe what normally happens.
+
+**Alternate scenarios** describe legitimate variations in behavior.
+
+**Exception scenarios** describe failures and other off-nominal conditions.
+
+Explicitly capturing these different behavioral paths helps identify requirements that can easily be missed when only nominal behavior is modeled.
+
+## From Structured Use Cases to Behavioral Tests
+
+Structured scenarios provide a natural basis for behavioral testing.
+
+The basic engineering chain is:
+
+**Use Cases → Scenarios → Steps → Test Cases**
+
+Each scenario describes a particular behavioral thread through the system.
+
+Alternate and exception scenarios are especially useful because they expose behavior that frequently becomes a source of defects when it has not been explicitly specified or tested.
+
+Scenario postconditions can also provide expected results that can be checked during testing.
 
 ## JSON and UCML
 
-The editor supports two complementary representations of its model.
+The editor provides multiple representations of the structured model.
 
-### JSON
+The **JSON view** exposes the underlying structured data used by the editor.
 
-The JSON view represents the full editor interchange format, including information used by the editor such as diagram layout.
+The **UCML textual view** provides an experimental textual representation of the same use case information.
 
-### UCML
+These representations make it possible to explore how structured use case information can move between interactive editing environments, textual formats, model repositories, and other engineering tools.
 
-UCML provides a human-readable textual notation for the semantic use case model.
+## Running the Editor
 
-The editor can therefore be used to explore the relationship between an interactive graphical editing experience, structured use case semantics, and textual model representations.
+The repository includes the source required to run the editor locally.
 
-## Running Locally
+The primary application entry point is:
 
-The application is self-contained and does not require npm or third-party Python packages.
+`app.py`
 
-From the repository root, run:
+A standalone JavaScript implementation is also included:
 
-```bash
-python3 app.py
-```
+`standalone-app.js`
 
-Then open:
+The repository source and supporting files can be used to examine, modify, and experiment with the reference implementation.
 
-```text
-http://127.0.0.1:8080/
-```
+## Example Deployment
 
-You can also serve the repository root with any static web server.
+The repository includes an example deployment configuration under:
 
-## Repository Contents
+`deployment/cpanel/`
 
-The current application consists of:
+This demonstrates one way to deploy the Python application using **cPanel and Passenger WSGI**.
+
+The cPanel material is provided as a **sample deployment**, not as a requirement for using the editor.
+
+Other hosting and deployment approaches may be used.
+
+## Repository Structure
 
 ```text
 structured-use-case-editor/
 ├── README.md
 ├── LICENSE
-├── .gitignore
 ├── app.py
-├── standalone.html
 ├── standalone-app.js
+├── src/
 ├── images/
 │   └── structured-use-case-editor.png
-├── src/
-│   └── styles.css
 └── deployment/
     └── cpanel/
         ├── README.md
-        ├── app.py
-        ├── passenger_wsgi.py
-        └── replacement_passenger_wsgi.py
-```
-
-Key files:
-
-- `standalone.html` - editor HTML shell
-- `standalone-app.js` - browser-based editor implementation
-- `src/styles.css` - editor styling
-- `app.py` - small deployment-neutral local static-file server
-- `images/structured-use-case-editor.png` - README screenshot
-- `deployment/cpanel/app.py` - lightweight Python WSGI/static-file server for cPanel-style hosting
-- `deployment/cpanel/passenger_wsgi.py` - cPanel/Passenger startup file
-- `deployment/cpanel/replacement_passenger_wsgi.py` - replacement startup file if cPanel overwrites the Passenger entry point
-- `deployment/cpanel/README.md` - optional cPanel deployment notes
-
-## Deployment
-
-The editor is deployment-neutral and can be hosted as static files.
-
-The cPanel/Passenger files in `deployment/cpanel/` are provided only as one example Python deployment for hosts that require a WSGI application.
-
-## Project Status
-
-The Structured Use Case Editor is a reference implementation under active development and evaluation.
-
-Its purpose is to support experimentation with structured use case modeling, editing workflows, model interchange, and textual notation.
-
-Interfaces, file formats, and modeling details may evolve as the Structured Use Cases approach is refined.
-
-## Contributing
-
-Feedback, testing, and experimentation are welcome.
-
-Useful contributions include:
-
-- Reporting editor defects
-- Testing different structured use case examples
-- Suggesting usability improvements
-- Testing JSON interchange
-- Experimenting with UCML
-- Improving documentation
-- Contributing test cases
-- Exploring interoperability with SysML v2 tools
-
-Once the project is published on GitHub, issues can be used to report problems and suggest improvements.
-
-## License
-
-This project is licensed under the Apache License 2.0. See the `LICENSE` file for details.
-
-## About Structured Use Cases
-
-Structured Use Cases is an effort to make use case modeling simpler, more rigorous, and more useful throughout systems and software engineering.
-
-The central idea is straightforward:
-
-**Describe what normally happens. Describe what else can happen. Describe what can go wrong. Then test all of it.**
+        └── passenger_wsgi.py
